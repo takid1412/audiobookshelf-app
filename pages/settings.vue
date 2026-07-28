@@ -382,6 +382,10 @@ export default {
         {
           text: this.$strings.LabelThemeLight,
           value: 'light'
+        },
+        {
+          text: 'Sepia',
+          value: 'sepia'
         }
       ]
     },

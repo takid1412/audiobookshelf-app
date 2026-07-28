@@ -2,7 +2,7 @@
   <div id="epub-frame" class="w-full">
     <div id="viewer" class="h-full w-full"></div>
 
-    <div class="fixed left-0 h-8 w-full px-4 flex items-center" :class="isLightTheme ? 'bg-white text-black' : isDarkTheme ? 'bg-[#232323] text-white/80' : 'bg-black text-white/80'" :style="{ bottom: isPlayerOpen ? '120px' : '0px' }">
+    <div class="fixed left-0 h-8 w-full px-4 flex items-center" :style="{ bottom: isPlayerOpen ? '120px' : '0px', color: colors.fontColor, backgroundColor: colors.backgroundColor }">
       <p v-if="totalLocations" class="text-xs text-slate-600">Location {{ currentLocationNum }} of {{ totalLocations }}</p>
       <div class="flex-grow" />
       <p class="text-xs">{{ progress }}%</p>
@@ -106,11 +106,28 @@ export default {
     isDarkTheme() {
       return this.ereaderSettings.theme === 'dark'
     },
+    colors() {
+      const themes = {
+        'dark': {
+          'fontColor': '#fff',
+          'backgroundColor': 'rgb(35 35 35)',
+        },
+        'black': {
+          'fontColor': '#fff',
+          'backgroundColor': 'rgb(0 0 0)',
+        },
+        'sepia': {
+          'fontColor': '#433422',
+          'backgroundColor': 'rgb(244 236 219)',
+        }
+      }
+      return themes[this.ereaderSettings.theme] ?? {
+        fontColor: '#000',
+        backgroundColor: 'rgb(255 255 255)',
+      }
+    },
     themeRules() {
-      const isDark = this.ereaderSettings.theme === 'dark'
-      const isBlack = this.ereaderSettings.theme === 'black'
-      const fontColor = isDark ? '#fff' : isBlack ? '#fff' : '#000'
-      const backgroundColor = isDark ? 'rgb(35 35 35)' : isBlack ? 'rgb(0 0 0)' : 'rgb(255, 255, 255)'
+      const {fontColor, backgroundColor} = this.colors
 
       return {
         '*': {

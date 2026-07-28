@@ -60,6 +60,25 @@
     --gradient-minimized-audio-player: linear-gradient(145deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.9) 20%, rgb(255, 255, 255) 60%);
   }
 
+  html[data-theme='sepia'] {
+      color: #433422;
+      --color-bg: 244 236 219;
+      --color-bg-hover: 236 226 205;
+      --color-fg: 67 52 34;
+      --color-fg-muted: 138 119 98;
+      --color-primary: 244 236 219;
+      --color-secondary: 236 226 205;
+      --color-border: 216 202 178;
+      --color-bg-toggle: 236 226 205;
+      --color-bg-toggle-selected: 216 202 178;
+      --color-track-cursor: 67 52 34;
+      --color-track: 180 160 135;
+      --color-track-buffered: 205 188 163;
+      --gradient-item-page: rgb(244, 236, 219);
+      --gradient-audio-player: rgb(244, 236, 219);
+      --gradient-minimized-audio-player: rgb(244, 236, 219);
+    }
+
   body {
     @apply bg-primary
   }
