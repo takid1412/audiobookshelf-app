@@ -404,6 +404,20 @@ export default {
             this.inittingDisplay = false
           })
         })
+
+        reader.rendition.hooks.content.register((contents) => {
+          console.log("INJECTED CONTENT");
+          const doc = contents.document;
+          const style = doc.createElement('style');
+
+          style.textContent = `
+            html, body {
+              margin:0 !important; padding:0 !important;
+            }
+          `;
+
+          doc.head.appendChild(style);
+        });
       })
     },
     applyTheme() {
