@@ -1,5 +1,5 @@
 <template>
-  <div id="epub-frame" class="w-full">
+  <div id="epub-frame" class="w-full relative">
     <div id="viewer" class="h-full w-full"></div>
 
     <div class="fixed left-0 h-8 w-full px-4 flex items-center" :style="{ bottom: isPlayerOpen ? '120px' : '0px', color: colors.fontColor, backgroundColor: colors.backgroundColor }">
@@ -7,6 +7,8 @@
       <div class="flex-grow" />
       <p class="text-xs">{{ progress }}%</p>
     </div>
+    <div class="absolute right-0 top-0 h-full w-1/5" @click.stop="next" @touchstart.stop.prevent @touchend.stop.prevent="next"></div>
+    <div class="absolute left-0 top-0 h-full w-1/5" @click.stop="prev" @touchstart.stop.prevent @touchend.stop.prevent="prev"></div>
   </div>
 </template>
 
@@ -74,6 +76,7 @@ export default {
       return this.$store.getters['getIsPlayerOpen']
     },
     readerHeightOffset() {
+      return 104
       return this.isPlayerOpen ? 204 : 104
     },
     /** @returns {Array<ePub.NavItem>} */
@@ -159,14 +162,10 @@ export default {
       return this.rendition?.display(href)
     },
     prev() {
-      if (this.rendition) {
-        this.rendition.prev()
-      }
+      this.rendition?.prev()
     },
     next() {
-      if (this.rendition) {
-        this.rendition.next()
-      }
+      this.rendition?.next()
     },
     /**
      * @param {object} payload
@@ -406,7 +405,6 @@ export default {
         })
 
         reader.rendition.hooks.content.register((contents) => {
-          console.log("INJECTED CONTENT");
           const doc = contents.document;
           const style = doc.createElement('style');
 
