@@ -7,8 +7,7 @@
       <div class="flex-grow" />
       <p class="text-xs">{{ progress }}%</p>
     </div>
-    <div class="absolute right-0 top-0 h-full w-1/5" @click.stop="next" @touchstart.stop.prevent @touchend.stop.prevent="next"></div>
-    <div class="absolute left-0 top-0 h-full w-1/5" @click.stop="prev" @touchstart.stop.prevent @touchend.stop.prevent="prev"></div>
+    <div class="fixed right-0 top-1 text-xs px-4 opacity-60">{{currentTime}}</div>
   </div>
 </template>
 
@@ -43,7 +42,10 @@ export default {
         fontScale: 100,
         lineSpacing: 115,
         textStroke: 0
-      }
+      },
+      lastWidth: 0,
+      currentTime: "...",
+      currentTimeInterval: null,
     }
   },
   watch: {
@@ -76,7 +78,6 @@ export default {
       return this.$store.getters['getIsPlayerOpen']
     },
     readerHeightOffset() {
-      return 104
       return this.isPlayerOpen ? 204 : 104
     },
     /** @returns {Array<ePub.NavItem>} */
@@ -447,6 +448,13 @@ export default {
       if (this.rendition?.resize) {
         this.rendition.resize(window.innerWidth, window.innerHeight - this.readerHeightOffset)
       }
+    },
+    handleResize() {
+      const currentWidth = window.innerWidth
+      if (currentWidth !== this.lastWidth) {
+        this.lastWidth = currentWidth
+        this.screenOrientationChange()
+      }
     }
   },
   mounted() {
@@ -458,7 +466,12 @@ export default {
     } else {
       document.addEventListener('orientationchange', this.screenOrientationChange)
     }
-    window.addEventListener('resize', this.screenOrientationChange)
+    // window.addEventListener('resize', this.screenOrientationChange)
+    this.lastWidth = window.innerWidth
+    window.addEventListener('resize', this.handleResize)
+    this.currentTimeInterval = setInterval(() => {
+      this.currentTime = (new Date()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hourCycle:'h24' })
+    }, 5000)
   },
   beforeDestroy() {
     this.book?.destroy()
@@ -469,7 +482,10 @@ export default {
     } else {
       document.removeEventListener('orientationchange', this.screenOrientationChange)
     }
-    window.removeEventListener('resize', this.screenOrientationChange)
+    // window.removeEventListener('resize', this.screenOrientationChange)
+    window.removeEventListener('resize', this.handleResize)
+
+    clearInterval(this.currentTimeInterval)
   }
 }
 </script>
