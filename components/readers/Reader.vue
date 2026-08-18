@@ -445,8 +445,8 @@ export default {
         return
       }
 
-      this.touchstartX = e.touches[0].screenX
-      this.touchstartY = e.touches[0].screenY
+      this.touchstartX = e.touches[0].clientX
+      this.touchstartY = e.touches[0].clientY
       this.touchstartTime = Date.now()
       this.touchIdentifier = e.touches[0].identifier
     },
@@ -455,8 +455,8 @@ export default {
         return
       }
 
-      this.touchendX = e.changedTouches[0].screenX
-      this.touchendY = e.changedTouches[0].screenY
+      this.touchendX = e.changedTouches[0].clientX
+      this.touchendY = e.changedTouches[0].clientY
       this.handleGesture()
     },
     closeEvt() {
