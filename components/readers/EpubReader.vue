@@ -7,7 +7,7 @@
       <div class="flex-grow" />
       <p class="text-xs">{{ progress }}%</p>
     </div>
-    <div class="fixed right-0 top-1 text-xs px-4 opacity-60">{{currentTime}}</div>
+    <div class="fixed left-0 top-2 text-xs px-4 opacity-60">{{currentTime}}</div>
   </div>
 </template>
 
@@ -45,7 +45,6 @@ export default {
       },
       lastWidth: 0,
       currentTime: "...",
-      currentTimeInterval: null,
     }
   },
   watch: {
@@ -283,6 +282,7 @@ export default {
     /** @param {string} location - CFI of the new location */
     relocated(location) {
       console.log(`[EpubReader] relocated ${location.start.cfi}`)
+      this.updateCurrentTime()
       if (this.inittingDisplay) {
         console.log(`[EpubReader] relocated but initting display ${location.start.cfi}`)
         return
@@ -419,6 +419,14 @@ export default {
         });
       })
     },
+    updateCurrentTime(){
+      const now = new Date();
+
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+
+      this.currentTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    },
     applyTheme() {
       if (!this.rendition) return
       this.rendition.getContents().forEach((c) => {
@@ -469,9 +477,6 @@ export default {
     // window.addEventListener('resize', this.screenOrientationChange)
     this.lastWidth = window.innerWidth
     window.addEventListener('resize', this.handleResize)
-    this.currentTimeInterval = setInterval(() => {
-      this.currentTime = (new Date()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hourCycle:'h24' })
-    }, 5000)
   },
   beforeDestroy() {
     this.book?.destroy()
@@ -484,8 +489,6 @@ export default {
     }
     // window.removeEventListener('resize', this.screenOrientationChange)
     window.removeEventListener('resize', this.handleResize)
-
-    clearInterval(this.currentTimeInterval)
   }
 }
 </script>
